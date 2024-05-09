@@ -1,36 +1,35 @@
-import smtplib
-import ssl
-import os
 from email.message import EmailMessage
+import ssl
+import smtplib
 
-def send_email(sender_email, sender_password, receiver_email, subject, body):
-    # Create a secure SSL context
-    context = ssl.create_default_context()
-    
-    # Initialize EmailMessage object
-    email = EmailMessage()
-    email['From'] = sender_email
-    email['To'] = receiver_email
-    email['Subject'] = subject
-    email.set_content(body)
-    
-    try:
-        # Connect to SMTP server and send email
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
-            smtp.login(sender_email, sender_password)
-            smtp.send_message(email)
-        print("Email sent successfully!")
-    except Exception as e:
-        print(f"An error occurred: {e}")
+email_sender = ""
+email_sender_app_password = ""
 
-def main():
-    sender_email = os.getenv("SENDER_EMAIL")
-    sender_password = os.getenv("SENDER_PASSWORD")
-    receiver_email = input("Enter receiver's email address: ")
-    subject = input("Enter email subject: ")
-    body = input("Enter email body: ")
+email_reciever = ""
 
-    send_email(sender_email, sender_password, receiver_email, subject, body)
+subject = "Just trying out something"
 
-if __name__ == "__main__":
-    main()
+body = """
+Hello!!
+Just sending this mail to test out something
+
+No need to worry!
+
+I am not a hacker that is going tp steal ur money
+
+"""
+em = EmailMessage()
+
+em['From'] = email_sender
+em['To'] = email_reciever
+em['subject'] = subject
+em.set_content(body)
+
+context = ssl.create_default_context()
+
+with smtplib.SMTP_SSL('smtp.gmail.com', 465, context = context) as smtp:
+    smtp.login(email_sender, email_sender_app_password)
+    smtp.sendmail(email_sender, email_reciever, em.as_string())
+
+
+
